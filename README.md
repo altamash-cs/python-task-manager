@@ -84,6 +84,13 @@ python main.py
 * Searching and Sorting
 * Python Data Structures (Lists and Sets)
 
+## Challenges Faced
+
+- Implementing JSON serialization for Task objects
+- Preventing duplicate tasks efficiently using sets
+- Designing modular architecture across multiple files
+- Handling invalid user input safely
+
 ## Future Improvements
 
 * Task priorities
