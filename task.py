@@ -12,10 +12,17 @@ class Task:
 
         self.done = True
 
-    def display(self):
+    def __str__(self):
 
         status = "✅" if self.done else "❌"
         return f"{status} {self.name} ({self.timestamp})"
+    
+    def __eq__(self, other):
+
+        if not isinstance(other, Task):
+            return False
+        
+        return self.name == other.name
     
     def to_dict(self):
         

@@ -31,7 +31,7 @@ def main():
 
                 for index, task in enumerate(tasks, start=1):
 
-                    print(f"{index}. {task.display()}")
+                    print(f"{index}. {task}")
 
         elif choice == 2:
 
@@ -85,18 +85,18 @@ def main():
             tasks.sort(key=lambda task: task.done)
             for index,task in enumerate(tasks, start=1):
 
-                print(f"{index}. {task.display()}")
+                print(f"{index}. {task}")
 
         elif choice == 6:
 
             tasks.sort(key=lambda task: task.done, reverse=True)
             for index,task in enumerate(tasks, start=1):
 
-                print(f"{index}. {task.display()}")
+                print(f"{index}. {task}")
 
         elif choice == 7:
 
-            target = input("Enter Task to Search: ")
+            target = input("Enter Task to Search: ").strip()
             found = False
             for index,task in enumerate(tasks, start=1):
 
@@ -108,7 +108,7 @@ def main():
                         print("\nMatching Tasks:")
 
                     found = True
-                    print(f"{index}. {task.display()}")
+                    print(f"{index}. {task}")
 
             if not found:
 

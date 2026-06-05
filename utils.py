@@ -17,14 +17,14 @@ def validate_number():
         choice = input("Enter your choice: ")
         try:
 
-            if choice.strip() =="":
+            if choice.strip() == "":
 
                 raise ValueError("Please Enter a Number before Submitting.")
             
             number = int(choice)
             
             if number <= 0:
-                raise ValueError("Please Enter a Positive Number.")
+                raise ValueError("Please Enter a number greater than 0.")
             
             return number
 
