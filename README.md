@@ -17,7 +17,7 @@ A command-line task management application built with Python using Object-Orient
 
 * Python
 * Object-Oriented Programming (OOP)
-* JSON
+* JSON Serialization
 * File Handling
 * Git & GitHub
 
@@ -30,14 +30,13 @@ python-task-manager/
 ├── task.py
 ├── storage.py
 ├── utils.py
-├── tasks.json
 └── README.md
 ```
 
 ### File Descriptions
 
 * **main.py** - Main application logic and menu handling
-* **task.py** - Task class definition and object serialization
+* **task.py** - Task class definition, object serialization, and special methods
 * **storage.py** - Saving and loading tasks from JSON files
 * **utils.py** - Utility functions such as menu display and input validation
 
@@ -74,11 +73,20 @@ python main.py
 8. Exit
 ```
 
+## Example Output
+
+```text
+1. ❌ Study Python (2026-06-05 17:30)
+2. ✅ Upload GitHub Project (2026-06-05 18:15)
+```
+
 ## Concepts Practiced
 
 * Classes and Objects
+* Inheritance and Composition
+* Special Methods (`__str__`, `__eq__`)
 * Modular Programming
-* Data Serialization
+* JSON Serialization
 * Exception Handling
 * Input Validation
 * Searching and Sorting
@@ -86,10 +94,12 @@ python main.py
 
 ## Challenges Faced
 
-- Implementing JSON serialization for Task objects
-- Preventing duplicate tasks efficiently using sets
-- Designing modular architecture across multiple files
-- Handling invalid user input safely
+* Implementing JSON serialization for Task objects
+* Preventing duplicate tasks efficiently using sets
+* Designing modular architecture across multiple files
+* Handling invalid user input safely
+* Managing object persistence between program runs
+* Refactoring display logic using Python special methods
 
 ## Future Improvements
 
