@@ -1,40 +1,80 @@
 import json
+from abc import ABC, abstractmethod
+
 from task import Task
 
-def save_tasks(tasks):
+from logger import logger
 
-    json_save_tasks = []
-    for task in tasks:
 
-        task_data = task.to_dict()
-        json_save_tasks.append(task_data)
-    
-    with open("tasks.json", "w") as file:
-        
-        json.dump(json_save_tasks, file, indent=4)
+class Storage(ABC):
 
-def load_tasks():
+    """
+    Abstract base class for all storage systems.
+    """
 
-    tasks = []
+    @abstractmethod
+    def save(self, tasks):
 
-    try:
+        """Save tasks."""
+        pass
 
-        with open("tasks.json", "r") as file:
+    @abstractmethod
+    def load(self):
 
-            data = json.load(file)
-            for task_data in data:
+        """Load tasks."""
+        pass
+
+
+class JSONStorage(Storage):
+
+    """
+    Handles saving and loading tasks from a JSON file.
+    """
+
+    def __init__(self, filename="tasks.json"):
+
+        self.filename = filename
+
+    def save(self, tasks):
+
+        json_tasks = [
+            task.to_dict()
+            for task in tasks
+        ]
+
+        with open(self.filename, "w") as file:
+
+            json.dump(
+                json_tasks,
+                file,
+                indent=4
+            )
+
+    def load(self):
+
+        try:
+
+            with open(self.filename, "r") as file:
                 
-                task = Task.from_dict(task_data)
-                tasks.append(task)
+                data = json.load(file)
 
-    except json.JSONDecodeError:
+            return [
+                Task.from_dict(task_data)
+                for task_data in data
+            ]
 
-        print("JSON file is Corrupted Pls Fix.")
-        tasks = []
+        except FileNotFoundError:
 
-    except FileNotFoundError:
+            logger.warning(
+                "No saved tasks found."
+            )
 
-        print("No saved tasks found.")
-        tasks = []
+            return []
 
-    return tasks
+        except json.JSONDecodeError:
+
+            logger.error(
+                "tasks.json is corrupted."
+            )
+
+            return []

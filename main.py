@@ -1,20 +1,28 @@
-from task import Task
-from storage import save_tasks, load_tasks
+from task_manager import TaskManager
 from utils import print_menu, validate_number
+from exceptions import(
+    DuplicateTaskError,
+    TaskNotFoundError
+)
 
-task_names = set()
-tasks = load_tasks()
-for task in tasks:
 
-    task_names.add(task.name)
+def display_tasks(tasks):
 
-def add_task(task_obj):
-    
-    tasks.append(task_obj)
-    save_tasks(tasks)
-    print("Task Added!")
+    """Displays a numbered list of tasks."""
+
+    if not tasks:
+
+        print("No tasks found.")
+        return
+
+    for index, task in enumerate(tasks, start=1):
+
+        print(f"{index}. {task}")
+
 
 def main():
+
+    manager = TaskManager()
 
     while True:
 
@@ -23,97 +31,90 @@ def main():
 
         if choice == 1:
 
-            if len(tasks) == 0:
-
-                print("No tasks yet!")
-
-            else:
-
-                for index, task in enumerate(tasks, start=1):
-
-                    print(f"{index}. {task}")
+            display_tasks(manager)
 
         elif choice == 2:
 
-            task_name = input("Enter your task: ")
-            task_name = task_name.strip()
-            if task_name == "":
+            task_name = input("Enter your task: ").strip()
 
-                print("Pls DO NOT Leave the field Empty.")
+            if not task_name:
 
-            elif task_name in task_names:
+                print("Please enter a task name.")
+                continue
 
-                print("Task already exists!")
+            try:
 
-            else:
+                added_task = manager.add_task(
+                    task_name
+                )
 
-                task = Task(task_name)
-                add_task(task)
-                task_names.add(task.name)
+                print(
+                    f"Added: {added_task.name}"
+                )
+
+            except DuplicateTaskError as e:
+
+                print(e)
+
+            except ValueError as e:
+
+                print(e)
 
         elif choice == 3:
 
-            task_number = validate_number()
-            index = task_number - 1
+            display_tasks(manager)
 
-            if 0 <= index < len(tasks):
+            task_number = validate_number(
+                "Task number: "
+            )
 
-                removed = tasks.pop(index)
-                task_names.remove(removed.name)
+            try:
+
+                removed = manager.remove_task(task_number - 1)
                 print(f"{removed.name} removed!")
-                save_tasks(tasks)
 
-            else:
-                print("Invalid task number!")
+            except TaskNotFoundError:
+
+                print("Invalid task number.")
 
         elif choice == 4:
 
-            task_number = validate_number()
-            index = task_number - 1
+            display_tasks(manager)
 
-            if 0 <= index < len(tasks):
+            task_number = validate_number(
+                "Task number: "
+            )
 
-                tasks[index].mark_complete()
-                save_tasks(tasks)
+            try:
+
+                manager.complete_task(task_number - 1)
                 print("Task marked complete!")
 
-            else:
-                print("Invalid task number!")
+            except TaskNotFoundError:
+                
+                print("Invalid task number.")
 
         elif choice == 5:
 
-            tasks.sort(key=lambda task: task.done)
-            for index,task in enumerate(tasks, start=1):
-
-                print(f"{index}. {task}")
+            display_tasks(
+                manager.get_completed_tasks()
+            )
 
         elif choice == 6:
 
-            tasks.sort(key=lambda task: task.done, reverse=True)
-            for index,task in enumerate(tasks, start=1):
-
-                print(f"{index}. {task}")
+            display_tasks(
+                manager.get_incomplete_tasks()
+            )
 
         elif choice == 7:
 
-            target = input("Enter Task to Search: ").strip()
-            found = False
-            for index,task in enumerate(tasks, start=1):
+            keyword = input(
+                "Search: "
+            ).strip()
 
+            results = manager.search_tasks(keyword)
 
-                if target.lower() in task.name.lower():
-
-                    if not found:
-
-                        print("\nMatching Tasks:")
-
-                    found = True
-                    print(f"{index}. {task}")
-
-            if not found:
-
-                print("No matching tasks found.")
-
+            display_tasks(results)
 
         elif choice == 8:
 
@@ -122,7 +123,8 @@ def main():
 
         else:
 
-            print("Please Enter a valid choice between 1-8.")
+            print("Please enter a valid option.")
+
 
 if __name__ == "__main__":
     main()
